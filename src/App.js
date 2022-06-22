@@ -18,6 +18,7 @@ const getCats = () => {
   })  // promise 2
   .catch(err => {
     console.log(err);
+    throw new Error("error fetching cats");
   })  // promise 3
 };
 
@@ -28,6 +29,7 @@ const petCat = id => {
   })  // promise 2
   .catch(err => {
     console.log(err);
+    throw new Error(`error while petting cat ${id}`);
   })  // promise 3
 };
 
@@ -35,6 +37,7 @@ const removeCat = id => {
   return axios.delete(`${kBaseUrl}/cats/${id}`) // promise1
   .catch(err => {
     console.log(err);
+    throw new Error(`error removing cat ${id}`);
   })  // promise 3
 };
 
@@ -47,6 +50,9 @@ function App() {
     .then(cats => {
       setCatData(cats);
     })
+    .catch(err => {
+      console.log(err.message);
+    });
   };
 
   useEffect(() => {
@@ -67,16 +73,23 @@ function App() {
         });  
       });
     })
+    .catch(err => {
+      console.log(err.message);
+    });
   };
 
   const unregisterCat = id => {
     // console.log(`unregister cat id ${id}`)
-    removeCat(id).then(cat => {  
+    removeCat(id)
+    .then(cat => {  
       setCatData(oldData => {
         return oldData.filter(cat => {
           return cat.id !== id;
         });
       });
+    })
+    .catch(err => {
+      console.log(err.message);
     });
   };
 
